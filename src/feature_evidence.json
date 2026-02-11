@@ -1,0 +1,90 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-add-internet-identity-authentication-and-require-users-to-sign-in-before-accessing-any-protected-pages",
+      "featureTitle": "Add Internet Identity authentication and require users to sign in before accessing any protected pages.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/auth/SignInScreen.tsx",
+        "frontend/src/components/auth/UnauthorizedScreen.tsx",
+        "frontend/src/hooks/useAuthzStatus.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-provide-an-owner-only-invite-admin-ui-to-add-and-remove-allowed-principals-friends-and-to-view-the-current-allowlist",
+      "featureTitle": "Provide an owner-only invite/admin UI to add and remove allowed Principals (friends) and to view the current allowlist.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/admin/InviteAdminPanel.tsx",
+        "frontend/src/hooks/useAllowlistAdmin.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-coherent-distinct-visual-theme-for-a-private-members-only-site-and-apply-it-consistently-across-the-sign-in-screen-unauthorized-screen-and-admin-invite-ui-avoid-blue-purple-as-primary-brand-colors",
+      "featureTitle": "Add a coherent, distinct visual theme for a private members-only site and apply it consistently across the sign-in screen, unauthorized screen, and admin/invite UI (avoid blue/purple as primary brand colors).",
+      "files": [
+        "frontend/src/components/admin/InviteAdminPanel.tsx",
+        "frontend/src/components/auth/SignInScreen.tsx",
+        "frontend/src/components/auth/UnauthorizedScreen.tsx",
+        "frontend/src/index.css"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-generate-and-render-required-static-images-from-frontend-public-assets-generated-for-the-private-site-theme",
+      "featureTitle": "Generate and render required static images from frontend/public/assets/generated for the private-site theme.",
+      "files": [
+        "frontend/src/components/auth/SignInScreen.tsx",
+        "frontend/src/components/auth/UnauthorizedScreen.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

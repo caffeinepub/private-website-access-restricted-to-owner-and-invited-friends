@@ -1,0 +1,13 @@
+{
+  "frontend/src/App.tsx": "Main application component that orchestrates authentication flow, authorization checks, profile setup, and renders appropriate screens (sign-in, unauthorized, or main app) based on user state.",
+  "frontend/src/components/MainApp.tsx": "Main authenticated application view displaying welcome message, user profile, member list, and admin panel toggle for authorized users with header and footer.",
+  "frontend/src/components/auth/SignInScreen.tsx": "Sign-in screen with Internet Identity authentication, featuring hero image, lock badge, and welcoming card layout for members-only access.",
+  "frontend/src/components/auth/UnauthorizedScreen.tsx": "Access denied screen shown to authenticated users who are not on the allowlist, with logout option and clear messaging about restricted access.",
+  "frontend/src/components/auth/ProfileSetupDialog.tsx": "Modal dialog for first-time user profile setup, allowing users to choose a display name and emoji avatar.",
+  "frontend/src/components/admin/InviteAdminPanel.tsx": "Admin-only panel for managing the allowlist, enabling owners to add/remove users by Principal ID with form validation and error handling.",
+  "frontend/src/hooks/useAuthzStatus.ts": "React Query hook that checks user authorization status and role (admin/user/guest) by querying backend, handling authorization errors gracefully.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for user profile operations including fetching caller profile, saving profile, and retrieving all member profiles.",
+  "frontend/src/hooks/useAllowlistAdmin.ts": "React Query hooks for admin allowlist management including fetching, adding, and removing Principal entries with cache invalidation.",
+  "frontend/src/index.css": "Global styles with OKLCH color system using warm sand, charcoal, and olive/gold palette (avoiding blue/purple) for both light and dark modes.",
+  "frontend/tailwind.config.js": "Tailwind configuration with custom font families, extended color tokens, border radius, shadows, and animations for the private members-only theme."
+}

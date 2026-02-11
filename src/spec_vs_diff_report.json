@@ -1,0 +1,80 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-11T13:13:34.881Z",
+  "summary": "Core auth-gating screens and an admin invite panel were added, along with a Motoko backend using an AccessControl/role model. However, the backend allowlist retrieval is stubbed (always returns []), which breaks the required ability for the owner to view/manage the allowlist as specified. Static generated image files are not evidenced in the diff summary (though they are referenced by the UI).",
+  "missing_requirements": [
+    {
+      "id": "REQ-2",
+      "requirement": "Backend stores an allowlist (or role map) of permitted Principals (including the owner) and supports viewing it.",
+      "reason": "The only allowlist read API shown (getAllowlist) is implemented as a stub that always returns an empty array, so the backend does not actually expose the stored allowlist for viewing.",
+      "evidence": [
+        "backend/main.mo (getAllowlist returns [])"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "Owner can view the current allowlist in the admin UI.",
+      "reason": "The admin UI queries getAllowlist(), but the backend implementation returns [] unconditionally, so the UI cannot actually display the current allowlist.",
+      "evidence": [
+        "backend/main.mo (getAllowlist returns [])",
+        "frontend/src/hooks/useAllowlistAdmin.ts (useGetAllowlist calls actor.getAllowlist())",
+        "frontend/src/components/admin/InviteAdminPanel.tsx (reads allowlist data)"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "requirement": "Generated images are placed under frontend/public/assets/generated (members-only-hero.dim_1600x900.png and lock-badge.dim_256x256.png).",
+      "reason": "The UI references the generated image paths, but the diff summary does not show any added files under frontend/public/assets/generated. One added file was omitted due to limits, so the images may exist but are not evidenced here.",
+      "evidence": [
+        "frontend/src/components/auth/SignInScreen.tsx (references /assets/generated/members-only-hero.dim_1600x900.png and /assets/generated/lock-badge.dim_256x256.png)",
+        "frontend/src/components/auth/UnauthorizedScreen.tsx (references the same assets)",
+        "File diff summary: \"Omitted files due to limits: added=1\""
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "User profile system (profile setup dialog, saving caller profile, listing all profiles/members).",
+      "reason": "BuildRequest focuses on private access control (owner + invited friends) and admin allowlist management; it does not request user profiles, emojis, or a member directory.",
+      "evidence": [
+        "backend/main.mo (UserProfile type, userProfiles map, getCallerUserProfile/saveCallerUserProfile/getAllProfiles)",
+        "frontend/src/components/auth/ProfileSetupDialog.tsx",
+        "frontend/src/hooks/useQueries.ts (profile and allProfiles queries)",
+        "frontend/src/components/MainApp.tsx (shows members and welcome/profile info)"
+      ]
+    },
+    {
+      "description": "Secret URL parameter/token-based initialization flow for access control (e.g., caffeineAdminToken and actor._initializeAccessControlWithSecret).",
+      "reason": "The BuildRequest does not specify a secret-token URL parameter mechanism or a special _initializeAccessControlWithSecret call; it only requires an owner principal set at initialization/first setup.",
+      "evidence": [
+        "frontend/src/hooks/useActor.ts (getSecretParameter('caffeineAdminToken') and actor._initializeAccessControlWithSecret(adminToken))",
+        "frontend/src/utils/urlParams.ts (URL/session parameter utilities)"
+      ]
+    }
+  ],
+  "confidence": 0.74,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/MainApp.tsx",
+    "frontend/src/components/admin/InviteAdminPanel.tsx",
+    "frontend/src/components/auth/ProfileSetupDialog.tsx",
+    "frontend/src/components/auth/SignInScreen.tsx",
+    "frontend/src/components/auth/UnauthorizedScreen.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useAllowlistAdmin.ts",
+    "frontend/src/hooks/useAuthzStatus.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

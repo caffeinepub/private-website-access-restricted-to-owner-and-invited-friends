@@ -1,0 +1,125 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Private members-only site with Internet Identity gating and owner invites (frontend-only)",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Gate the entire UI behind Internet Identity sign-in and expose caller Principal to the app for authorization decisions.",
+      "acceptanceCriteria": [
+        "When not signed in, the app only shows a sign-in screen (no private content is visible).",
+        "When signed in, the app can obtain and use the authenticated user Principal for authorization decisions."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the top-level app that uses the existing useInternetIdentity hook to enforce a sign-in-only experience (render only the sign-in screen when identity is missing) and uses the authenticated user Principal (identity.getPrincipal()) to drive access-control checks. Use the selected \"authorization\" component guidance for login/logout state handling and clearing cached data on logout. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/SignInScreen.tsx",
+          "operation": "create",
+          "description": "Create a dedicated sign-in screen UI that uses the existing useInternetIdentity hook to initiate Internet Identity login and supports logout. Use the selected \"authorization\" component guidance for login UX and error handling. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/UnauthorizedScreen.tsx",
+          "operation": "create",
+          "description": "Create an unauthorized screen shown when a signed-in user is not invited (based on backend authorization failures or role checks). Ensure no private content renders underneath. Use the selected \"authorization\" component guidance for AccessDenied/unauthorized UI patterns. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useAuthzStatus.ts",
+          "operation": "create",
+          "description": "Add a React Query-based hook that uses the existing useActor hook to query authorization-related backend capabilities (e.g., getCallerUserRole and/or isCallerAdmin) only after authentication, and normalizes authorization failures into a UI-friendly status (authorized / unauthorized / loading / error). Use the selected \"authorization\" component guidance for gracefully handling backend trap errors. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Provide an owner-only invite/admin UI to view and manage the allowlist, with clear authorization failure messaging.",
+      "acceptanceCriteria": [
+        "Signed-in owner can add a friend by entering their Principal text and submitting.",
+        "Signed-in owner can remove a friend from the allowlist.",
+        "Non-owner users cannot access the admin UI and cannot modify the allowlist.",
+        "UI clearly shows authorization failures (e.g., 'You are not invited to this site. Contact the owner.')."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/admin/InviteAdminPanel.tsx",
+          "operation": "create",
+          "description": "Create an owner-only admin panel UI that (1) fetches and displays the current allowlist, (2) allows adding a Principal (text input -> Principal parsing -> submit), and (3) allows removing an entry. Use backendInterface capabilities getAllowlist/addAllowlistEntry/removeAllowlistEntry and guard the entire panel by checking admin state (e.g., isCallerAdmin). Use the selected \"authorization\" component guidance for access control UI and handling authorization trap errors. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useAllowlistAdmin.ts",
+          "operation": "create",
+          "description": "Add React Query hooks (query + mutations) for allowlist admin actions: read allowlist, add entry, remove entry, with cache invalidation and user-friendly error surfaces for authorization failures. Use the selected \"authorization\" component guidance for error handling and for clearing cached data on logout. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the owner-only admin UI into the signed-in app experience (e.g., a protected section or navigation item) and ensure non-admin users cannot reach it (render UnauthorizedScreen or a clear 'Not authorized' message instead). Use the selected \"authorization\" component guidance for admin-only gating patterns. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Implement a cohesive private-site visual theme (non blue/purple primary) across sign-in, unauthorized, and admin screens.",
+      "acceptanceCriteria": [
+        "App uses a consistent palette, typography, and layout style across all screens.",
+        "Sign-in and unauthorized states look intentional and polished, not like default placeholders.",
+        "Primary colors are not blue/purple unless explicitly introduced elsewhere."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Create global styling with CSS variables that Tailwind reads (e.g., --background/--foreground/--primary/--secondary/etc.), selecting a distinct private-site palette that avoids blue/purple as primary (e.g., charcoal + warm sand + olive/gold accents). Apply consistent typography and base layout styles."
+        },
+        {
+          "path": "frontend/src/components/auth/SignInScreen.tsx",
+          "operation": "modify",
+          "description": "Apply the private-site theme styles (layout, typography, buttons, spacing) so the sign-in screen looks polished and consistent with the rest of the app."
+        },
+        {
+          "path": "frontend/src/components/auth/UnauthorizedScreen.tsx",
+          "operation": "modify",
+          "description": "Apply the same theme styling to the unauthorized screen, including clear hierarchy and readable messaging."
+        },
+        {
+          "path": "frontend/src/components/admin/InviteAdminPanel.tsx",
+          "operation": "modify",
+          "description": "Apply the same theme styling to the admin/invite UI (tables/lists, form fields, buttons) for a coherent members-only look."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Add required generated static images and render them on sign-in/unauthorized screens from the frontend public assets.",
+      "acceptanceCriteria": [
+        "Generated images are placed under frontend/public/assets/generated and referenced directly from the frontend.",
+        "Sign-in/unauthorized screens display the generated imagery without fetching via the backend."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/members-only-hero.dim_1600x900.png",
+          "operation": "create",
+          "description": "Add the generated static image asset exactly at frontend/public/assets/generated/members-only-hero.dim_1600x900.png for the members-only theme."
+        },
+        {
+          "path": "frontend/public/assets/generated/lock-badge.dim_256x256.png",
+          "operation": "create",
+          "description": "Add the generated static image asset exactly at frontend/public/assets/generated/lock-badge.dim_256x256.png for the lock badge icon."
+        },
+        {
+          "path": "frontend/src/components/auth/SignInScreen.tsx",
+          "operation": "modify",
+          "description": "Render the generated imagery on the sign-in screen by referencing the public assets directly at frontend/public/assets/generated/members-only-hero.dim_1600x900.png and/or frontend/public/assets/generated/lock-badge.dim_256x256.png (no backend fetching)."
+        },
+        {
+          "path": "frontend/src/components/auth/UnauthorizedScreen.tsx",
+          "operation": "modify",
+          "description": "Render the generated imagery on the unauthorized screen by referencing the public assets directly at frontend/public/assets/generated/members-only-hero.dim_1600x900.png and/or frontend/public/assets/generated/lock-badge.dim_256x256.png (no backend fetching)."
+        }
+      ]
+    }
+  ]
+}

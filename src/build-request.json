@@ -1,0 +1,113 @@
+{
+  "kind": "build_request",
+  "title": "Private website access restricted to owner and invited friends",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Add Internet Identity authentication and require users to sign in before accessing any protected pages.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Create a website that only me and my friends can use"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When not signed in, the app only shows a sign-in screen (no private content is visible).",
+        "When signed in, the app can obtain and use the authenticated user Principal for authorization decisions."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement backend authorization with an allowlist of approved user Principals so only the site owner and explicitly invited friends can use the app.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Create a website that only me and my friends can use"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend stores an owner Principal set at initialization (or first authorized setup).",
+        "Backend stores an allowlist (or role map) of permitted Principals (including the owner).",
+        "All backend methods that return or mutate private data enforce that the caller Principal is in the allowlist; unauthorized callers receive a clear error."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Provide an owner-only invite/admin UI to add and remove allowed Principals (friends) and to view the current allowlist.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Create a website that only me and my friends can use"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Signed-in owner can add a friend by entering their Principal text and submitting.",
+        "Signed-in owner can remove a friend from the allowlist.",
+        "Non-owner users cannot access the admin UI and cannot modify the allowlist.",
+        "UI clearly shows authorization failures (e.g., 'You are not invited to this site. Contact the owner.')."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add a coherent, distinct visual theme for a private members-only site and apply it consistently across the sign-in screen, unauthorized screen, and admin/invite UI (avoid blue/purple as primary brand colors).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Create a website that only me and my friends can use"
+        ]
+      },
+      "acceptanceCriteria": [
+        "App uses a consistent palette, typography, and layout style across all screens.",
+        "Sign-in and unauthorized states look intentional and polished, not like default placeholders.",
+        "Primary colors are not blue/purple unless explicitly introduced elsewhere."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Generate and render required static images from frontend/public/assets/generated for the private-site theme.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Create a website that only me and my friends can use"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Generated images are placed under frontend/public/assets/generated and referenced directly from the frontend.",
+        "Sign-in/unauthorized screens display the generated imagery without fetching via the backend."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single Motoko actor (all logic in backend/main.mo).",
+    "Do not edit frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui (compose them instead).",
+    "Use English for all user-facing UI text."
+  ],
+  "nonGoals": [
+    "Public registration/sign-up flow for unknown users.",
+    "Third-party authentication providers other than Internet Identity.",
+    "Real-time presence/chat or invite notifications."
+  ],
+  "imageRequirements": {
+    "required": [
+      "Minimalist \"members-only\" illustration with a lock and subtle geometric shapes (members-only-hero.dim_1600x900.png)",
+      "Small lock badge icon, simple flat style (lock-badge.dim_256x256.png)"
+    ],
+    "edits": []
+  }
+}
